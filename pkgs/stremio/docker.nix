@@ -21,7 +21,7 @@
   bash,
   coreutils,
   stdenvNoCC,
-  web-ui ? ./web-ui,
+  web-ui ? null,
 }:
 let
   # Build a proper Python environment with all deps using python.withPackages
@@ -62,14 +62,18 @@ let
   ];
 
   # Web UI build files extracted from the upstream androshack/stremio-docker-dual image
-  webUI = runCommand "stremio-web-ui" { } ''
-    mkdir -p $out/srv/stremio-server/build
-    cp -r ${./web-ui}/* $out/srv/stremio-server/build/
-    # localStorage.json must be at the build root (service-worker.js expects it)
-    cp ${./web-ui}/localStorage.json $out/srv/stremio-server/localStorage.json
-    chmod -R +r $out/srv/stremio-server
-  '';
-
+  webUI = if web-ui != null then
+    runCommand "stremio-web-ui" { } ''
+      mkdir -p $out/srv/stremio-server/build
+      cp -r ${web-ui}/* $out/srv/stremio-server/build/
+      # localStorage.json must be at the build root (service-worker.js expects it)
+      cp ${web-ui}/localStorage.json $out/srv/stremio-server/localStorage.json
+      chmod -R +r $out/srv/stremio-server
+    ''
+  else
+    runCommand "stremio-web-ui-empty" { } ''
+      mkdir -p $out/srv/stremio-server/build
+    '';
   # Entrypoint script (replicates docker/entrypoint.sh)
   entrypointScript = writeText "stremio-entrypoint.sh" ''
 #!/bin/sh
