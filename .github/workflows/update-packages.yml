@@ -38,7 +38,6 @@ jobs:
         id: update
         env:
           GH_TOKEN: ${{ github.token }}
-          NIX_CONFIG: "pure-eval = false"
         run: |
           set -o pipefail
           # Skip this matrix entry when dispatch targeted a different package.
