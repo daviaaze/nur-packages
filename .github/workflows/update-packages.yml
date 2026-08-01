@@ -24,9 +24,6 @@ jobs:
       fail-fast: false
       matrix:
         package: [rtk, pup, orca, opencli]
-    # Skip only when dispatch explicitly names a different package.
-    # Empty input (scheduled runs) => update everything.
-    if: ${{ github.event.inputs.package == '' || github.event.inputs.package == 'all' || github.event.inputs.package == matrix.package }}
 
     steps:
       - name: Checkout Repository
@@ -42,6 +39,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          # Skip this matrix entry when dispatch targeted a different package.
+          # Empty input (scheduled runs) => update everything.
+          TARGET="${{ github.event.inputs.package }}"
+          if [[ -n "$TARGET" && "$TARGET" != "all" && "$TARGET" != "${{ matrix.package }}" ]]; then
+            echo "Skipping ${{ matrix.package }} (targeted: $TARGET)"
+            echo "updated=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
           chmod +x scripts/update-package.sh
           nix shell nixpkgs#nix-update -c bash scripts/update-package.sh "${{ matrix.package }}" 2>&1 | tee /tmp/update.log
           if git diff --quiet; then
