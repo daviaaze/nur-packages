@@ -1,35 +1,53 @@
 {
   lib,
-  buildNpmPackage,
+  stdenv,
   fetchFromGitHub,
-  nodejs_24,
+  fetchPnpmDeps,
+  nodejs,
+  pnpm_10,
+  pnpmConfigHook,
+  makeWrapper,
 }:
-buildNpmPackage rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "orca";
   version = "1.4.163";
 
   src = fetchFromGitHub {
     owner = "stablyai";
     repo = "orca";
-    tag = "v${version}";
+    tag = "v${finalAttrs.version}";
     hash = "sha256-EKwnw10YhRkVVZJv0IO963c8hs0KqWtFpbQ9bF77ErM=";
   };
 
-  npmDepsHash = "sha256-UAS9cTUQuqYkD96pnX/+zdqrYGqF2gnlNQVlpwn/V0I=";
+  pnpmDeps = fetchPnpmDeps {
+    pname = "orca";
+    inherit (finalAttrs) version src;
+    pnpm = pnpm_10;
+    fetcherVersion = 3;
+    hash = "sha256-6SV2MB/EOrrSOjSSIDRLPcSGnwkAG2lNldAG3iE4zDg=";
+  };
 
-  nodejs = nodejs_24;
+  nativeBuildInputs = [
+    nodejs
+    pnpm_10
+    pnpmConfigHook
+    makeWrapper
+  ];
 
-  postBuild = ''
-    npm run build:cli
+  buildPhase = ''
+    runHook preBuild
+    pnpm run build:cli
+    runHook postBuild
   '';
 
-  postInstall = ''
-    # Ship the CLI output plus its runtime deps.
+  installPhase = ''
+    runHook preInstall
     mkdir -p $out/lib/orca
     cp -r package.json out node_modules $out/lib/orca
     mkdir -p $out/bin
     makeWrapper ${nodejs}/bin/node $out/bin/orca \
       --add-flags $out/lib/orca/out/cli/index.js
+    runHook postInstall
   '';
 
   meta = {
@@ -39,4 +57,4 @@ buildNpmPackage rec {
     mainProgram = "orca";
     platforms = [ "x86_64-linux" "aarch64-linux" ];
   };
-}
+})
