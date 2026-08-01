@@ -36,18 +36,16 @@ jobs:
 
       - name: Authenticate private inputs (lux-cli)
         run: |
-          mkdir -p ~/.config/nix
-          cat > ~/.config/nix/netrc <<EOF
-          machine github.com
-            login daviaaze
-            password ${{ secrets.PAT }}
-          EOF
+          git config --global url."https://x-access-token:${PAT}@github.com/".insteadOf "https://github.com/"
+        env:
+          PAT: ${{ secrets.PAT }}
 
       - name: Run updater
         id: update
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -o pipefail
           # Skip this matrix entry when dispatch targeted a different package.
           # Empty input (scheduled runs) => update everything.
           TARGET="${{ github.event.inputs.package }}"

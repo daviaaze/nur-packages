@@ -9,12 +9,12 @@
         "rev": "3840bb1f0417024efde1afc710b6f24124199d88",
         "revCount": 265,
         "type": "git",
-        "url": "ssh://git@github.com/lux-group/cli.git"
+        "url": "https://github.com/lux-group/cli.git"
       },
       "original": {
         "ref": "main",
         "type": "git",
-        "url": "ssh://git@github.com/lux-group/cli.git"
+        "url": "https://github.com/lux-group/cli.git"
       }
     },
     "nixpkgs": {
