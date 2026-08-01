@@ -3,6 +3,7 @@
 }:
 let
   torrentio-addon = pkgs.callPackage ./pkgs/torrentio/package.nix { };
+  stremio-python = pkgs.callPackage ./pkgs/stremio/stremio-python.nix { };
 in
 {
   atlassian-cli = pkgs.callPackage ./pkgs/atlassian-cli/package.nix { };
@@ -14,5 +15,13 @@ in
   torrentio-docker = pkgs.callPackage ./pkgs/torrentio/docker.nix {
     inherit torrentio-addon;
   };
-  inherit torrentio-addon;
+  stremio-server = pkgs.callPackage ./pkgs/stremio/server.nix {
+    inherit stremio-python;
+  };
+  stremio-docker = pkgs.callPackage ./pkgs/stremio/docker.nix {
+    python = stremio-python;
+    stremio-server = stremio-server;
+    inherit stremio-python;
+  };
+  inherit torrentio-addon stremio-python;
 }

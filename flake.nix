@@ -20,6 +20,19 @@
           pkgs = import nixpkgs { inherit system; };
 
           torrentio-addon = pkgs.callPackage ./pkgs/torrentio/package.nix { };
+
+          stremio-python = import ./pkgs/stremio/stremio-python.nix {
+            inherit (pkgs) lib python314 buildPythonPackage fetchFromGitHub;
+          };
+          stremio-server = pkgs.callPackage ./pkgs/stremio/server.nix {
+            inherit (pkgs) lib fetchFromGitHub uv-build;
+            python = stremio-python;
+          };
+          stremio-docker = pkgs.callPackage ./pkgs/stremio/docker.nix {
+            inherit (pkgs) lib dockerTools ffmpeg nginx curl runCommand writeText symlinkJoin bash coreutils stdenvNoCC;
+            inherit stremio-server;
+            python = stremio-python;
+          };
         in
         {
           atlassian-cli = pkgs.callPackage ./pkgs/atlassian-cli/package.nix { };
@@ -31,7 +44,7 @@
           torrentio-docker = pkgs.callPackage ./pkgs/torrentio/docker.nix {
             inherit torrentio-addon;
           };
-          inherit torrentio-addon;
+          inherit torrentio-addon stremio-python stremio-server stremio-docker;
         };
     in
     {
