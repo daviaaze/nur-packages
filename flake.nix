@@ -25,7 +25,8 @@
             inherit (pkgs) lib python314 buildPythonPackage fetchFromGitHub;
           };
           stremio-server = pkgs.callPackage ./pkgs/stremio/server.nix {
-            inherit (pkgs) lib fetchFromGitHub buildPythonPackage uv-build;
+            inherit (pkgs) lib fetchFromGitHub uv-build;
+            buildPythonPackage = pkgs.python3Packages.buildPythonPackage;
             python = stremio-python;
           };
           stremio-docker = pkgs.callPackage ./pkgs/stremio/docker.nix {
