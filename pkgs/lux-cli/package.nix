@@ -11,17 +11,8 @@
   postgresql,
   ssm-session-manager-plugin,
   awscli2,
+  src,
 }:
-let
-  # Private INTERNAL repo — fetched via SSH, which works locally but
-  # not in CI. This is fine: lux-cli is only built locally (never on
-  # GitHub Actions). The repo is not a flake input to avoid forcing
-  # CI to fetch a repo it cannot access.
-  src = builtins.fetchGit {
-    url = "git@github.com:lux-group/cli.git";
-    ref = "main";
-  };
-in
 stdenv.mkDerivation {
   pname = "luxuryescapes-cli";
   inherit ((builtins.fromJSON (builtins.readFile "${src}/package.json"))) version;

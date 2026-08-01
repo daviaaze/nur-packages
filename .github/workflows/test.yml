@@ -38,6 +38,8 @@ jobs:
               nix build ".#$pkg" --print-build-logs
             done
           fi
+        env:
+          NIX_CONFIG: "pure-eval = false"
 
       - name: Auto-merge if this is a bot update PR
         if: startsWith(github.head_ref, 'update-')
