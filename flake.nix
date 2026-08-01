@@ -3,23 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-
-    # Work-specific (private, INTERNAL repo). Fetched over HTTPS — CI
-    # authenticates via ~/.config/nix/netrc (PAT secret), local builds via
-    # the same netrc or your gh token. Never git+ssh: GitHub Actions cannot
-    # use your SSH keys.
-    lux-cli = {
-      url = "git+https://github.com/lux-group/cli.git?ref=main";
-      flake = false;
-    };
   };
 
   outputs =
-    {
-      self,
-      nixpkgs,
-      lux-cli,
-    }:
+    { self, nixpkgs }:
     let
       systems = [
         "x86_64-linux"
@@ -37,7 +24,7 @@
         {
           atlassian-cli = pkgs.callPackage ./pkgs/atlassian-cli/package.nix { };
           batteryscope = pkgs.callPackage ./pkgs/batteryscope/package.nix { };
-          lux-cli = pkgs.callPackage ./pkgs/lux-cli/package.nix { src = lux-cli; };
+          lux-cli = pkgs.callPackage ./pkgs/lux-cli/package.nix { };
           opencli = pkgs.callPackage ./pkgs/opencli/package.nix { };
           orca = pkgs.callPackage ./pkgs/orca/package.nix { };
           pup = pkgs.callPackage ./pkgs/pup/package.nix { };

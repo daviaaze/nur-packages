@@ -1,22 +1,5 @@
 {
   "nodes": {
-    "lux-cli": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1783425964,
-        "narHash": "sha256-M3uiS3QNGTbu1cm4dOIswhx4gPZqdv9uv6nDHIWQfoY=",
-        "ref": "main",
-        "rev": "3840bb1f0417024efde1afc710b6f24124199d88",
-        "revCount": 265,
-        "type": "git",
-        "url": "https://github.com/lux-group/cli.git"
-      },
-      "original": {
-        "ref": "main",
-        "type": "git",
-        "url": "https://github.com/lux-group/cli.git"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1785454630,
@@ -35,7 +18,6 @@
     },
     "root": {
       "inputs": {
-        "lux-cli": "lux-cli",
         "nixpkgs": "nixpkgs"
       }
     }
