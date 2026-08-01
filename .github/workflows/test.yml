@@ -1,0 +1,47 @@
+name: Build and Test
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: test-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build all packages
+        run: |
+          # Determine changed packages from the PR diff
+          CHANGED=$(git diff --name-only origin/main...HEAD | grep -oP 'pkgs/\K[^/]+' | sort -u)
+          if [ -z "$CHANGED" ]; then
+            echo "No package files changed; running flake check"
+            nix flake check
+          else
+            for pkg in $CHANGED; do
+              echo "Building $pkg"
+              nix build ".#$pkg" --print-build-logs
+            done
+          fi
+
+      - name: Auto-merge if this is a bot update PR
+        if: startsWith(github.head_ref, 'update-')
+        env:
+          GH_TOKEN: ${{ secrets.PAT || github.token }}
+        run: |
+          gh pr merge --auto --squash ${{ github.event.pull_request.number }}

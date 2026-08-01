@@ -1,0 +1,65 @@
+name: Update Packages
+
+on:
+  schedule:
+    - cron: '30 3 * * 1'  # Weekly on Monday at 3:30 AM UTC (after zen-browser)
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Package attr to update (or "all")'
+        required: false
+        default: 'all'
+
+concurrency:
+  group: update-packages
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [rtk, pup, orca, opencli]
+    if: ${{ github.event.inputs.package == 'all' || github.event.inputs.package == matrix.package }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run updater
+        id: update
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          chmod +x scripts/update-package.sh
+          nix shell nixpkgs#nix-update -c bash scripts/update-package.sh "${{ matrix.package }}" 2>&1 | tee /tmp/update.log
+          if git diff --quiet; then
+            echo "No changes for ${{ matrix.package }}"
+            echo "updated=false" >> $GITHUB_OUTPUT
+          else
+            echo "updated=true" >> $GITHUB_OUTPUT
+            git diff --stat
+          fi
+
+      - name: Create Pull Request
+        if: steps.update.outputs.updated == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.PAT }}
+          commit-message: 'chore: update ${{ matrix.package }}'
+          title: 'chore: update ${{ matrix.package }}'
+          body: |
+            Automated update of `${{ matrix.package }}`.
+
+            The build will be tested automatically. This PR will be merged once all checks pass.
+          branch: update-${{ matrix.package }}
+          delete-branch: true
