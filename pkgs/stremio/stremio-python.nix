@@ -3,7 +3,6 @@
   buildPythonPackage,
   fetchFromGitHub,
   python314,
-  python3,
 }:
 let
   # stremio-server requires pydantic-settings>=2.14.1; upstream has older.
