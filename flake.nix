@@ -4,10 +4,12 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    # Work-specific (private). Override with `follows` in consumer flakes
-    # that have their own access to this repo.
+    # Work-specific (private, INTERNAL repo). Fetched over HTTPS — CI
+    # authenticates via ~/.config/nix/netrc (PAT secret), local builds via
+    # the same netrc or your gh token. Never git+ssh: GitHub Actions cannot
+    # use your SSH keys.
     lux-cli = {
-      url = "git+ssh://git@github.com/lux-group/cli.git?ref=main";
+      url = "git+https://github.com/lux-group/cli.git?ref=main";
       flake = false;
     };
   };

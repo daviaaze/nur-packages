@@ -25,6 +25,15 @@ jobs:
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Authenticate private inputs (lux-cli)
+        run: |
+          mkdir -p ~/.config/nix
+          cat > ~/.config/nix/netrc <<EOF
+          machine github.com
+            login daviaaze
+            password ${{ secrets.PAT }}
+          EOF
+
       - name: Build all packages
         run: |
           # Determine changed packages from the PR diff
