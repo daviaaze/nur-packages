@@ -24,7 +24,9 @@ jobs:
       fail-fast: false
       matrix:
         package: [rtk, pup, orca, opencli]
-    if: ${{ github.event.inputs.package == 'all' || github.event.inputs.package == matrix.package }}
+    # Skip only when dispatch explicitly names a different package.
+    # Empty input (scheduled runs) => update everything.
+    if: ${{ github.event.inputs.package == '' || github.event.inputs.package == 'all' || github.event.inputs.package == matrix.package }}
 
     steps:
       - name: Checkout Repository
