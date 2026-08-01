@@ -1,31 +1,35 @@
 {
   lib,
-  appimageTools,
-  fetchurl,
+  buildNpmPackage,
+  fetchFromGitHub,
+  nodejs_24,
 }:
-let
+buildNpmPackage rec {
+  pname = "orca";
   version = "1.4.163";
 
-  src = fetchurl {
-    url = "https://github.com/stablyai/orca/releases/download/v${version}/orca-linux.AppImage";
-    hash = "sha256-OWphybstsEMdTSOqqKUcR2+HW1mxWQYj2JFPsnpVIEk=";
+  src = fetchFromGitHub {
+    owner = "stablyai";
+    repo = "orca";
+    tag = "v${version}";
+    hash = "sha256-EKwnw10YhRkVVZJv0IO963c8hs0KqWtFpbQ9bF77ErM=";
   };
 
-  appimageContents = appimageTools.extract {
-    pname = "orca";
-    inherit version src;
-  };
-in
-appimageTools.wrapType2 {
-  pname = "orca";
-  inherit version src;
+  npmDepsHash = "sha256-UAS9cTUQuqYkD96pnX/+zdqrYGqF2gnlNQVlpwn/V0I=";
 
-  extraInstallCommands = ''
-    install -Dm444 ${appimageContents}/orca-ide.desktop -t $out/share/applications
-    substituteInPlace $out/share/applications/orca-ide.desktop \
-      --replace-fail 'Exec=AppRun --no-sandbox %U' 'Exec=orca %U'
-    install -Dm444 ${appimageContents}/usr/share/icons/hicolor/512x512/apps/orca-ide.png \
-      -t $out/share/icons/hicolor/512x512/apps
+  nodejs = nodejs_24;
+
+  postBuild = ''
+    npm run build:cli
+  '';
+
+  postInstall = ''
+    # Ship the CLI output plus its runtime deps.
+    mkdir -p $out/lib/orca
+    cp -r package.json out node_modules $out/lib/orca
+    mkdir -p $out/bin
+    makeWrapper ${nodejs}/bin/node $out/bin/orca \
+      --add-flags $out/lib/orca/out/cli/index.js
   '';
 
   meta = {
@@ -33,7 +37,6 @@ appimageTools.wrapType2 {
     homepage = "https://github.com/stablyai/orca";
     license = lib.licenses.mit;
     mainProgram = "orca";
-    platforms = [ "x86_64-linux" ];
-    sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
+    platforms = [ "x86_64-linux" "aarch64-linux" ];
   };
 }
