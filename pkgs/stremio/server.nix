@@ -28,7 +28,7 @@ buildPythonPackage {
       owner = "andrewhack";
       repo = "stremio-libtorrent-server";
       rev = "9a15ee486ced23bda24677b8916c136679c70c72";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      hash = "sha256-ioIzpXo8u+fi4bCS+kpTVL4kh9TartzgR/QkTfK5xd8=";
     };
 
   pyproject = true;
