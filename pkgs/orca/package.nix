@@ -10,13 +10,13 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "orca";
-  version = "1.4.163";
+  version = "1.4.165";
 
   src = fetchFromGitHub {
     owner = "stablyai";
     repo = "orca";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-EKwnw10YhRkVVZJv0IO963c8hs0KqWtFpbQ9bF77ErM=";
+    hash = "sha256-/2gN9Ozu+e3A5JeEFM3LQ709byUvCtkhQKgMm6F7xZc=";
   };
 
   pnpmDeps = fetchPnpmDeps {
