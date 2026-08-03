@@ -7,16 +7,16 @@
 }:
 buildNpmPackage rec {
   pname = "opencli";
-  version = "1.8.3";
+  version = "1.8.6";
 
   src = fetchFromGitHub {
     owner = "jackwener";
     repo = "OpenCLI";
     rev = "v${version}";
-    hash = "sha256-aOL8hxIm3N8H8grS0SK0l0Ld7vIVrGTcGcOizjHW5Zg=";
+    hash = "sha256-TPQmKQRU4cloijpFs/rFDsj8RETPkznlnBXiAn2rRgg=";
   };
 
-  npmDepsHash = "sha256-eFH5lH1kEpyGnfgbjU9Yui1t1YfYYE7RlMERIV19BXo=";
+  npmDepsHash = "sha256-btlVEvsQM4gdrh5elZkWZieIYRM0T6HvNXYEupegvnY=";
 
   # Skip auto-generated install hooks - we handle build ourselves
   dontNpmInstall = true;
