@@ -6,7 +6,7 @@
   openssl,
 }:
 let
-  version = "1.9.2";
+  version = "1.10.1";
   platform =
     if stdenv.hostPlatform.isLinux && stdenv.hostPlatform.isx86_64 then
       "Linux_x86_64"
@@ -27,7 +27,7 @@ stdenv.mkDerivation {
     url = "https://github.com/datadog-labs/pup/releases/download/v${version}/pup_${version}_${platform}.tar.gz";
     hash =
       {
-        Linux_x86_64 = "sha256-DtgEifivFOYd085G7WAK1HTCZoKJtxq1yMAlK6Fo2AY=";
+        Linux_x86_64 = "sha256-xtvCzaSAI/Sz+J1iwGEiYiZgDQjdk83uW4G3vBzhqPY=";
         Linux_arm64 = lib.fakeSha256;
         Darwin_x86_64 = lib.fakeSha256;
         Darwin_arm64 = lib.fakeSha256;
