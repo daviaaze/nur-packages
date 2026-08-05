@@ -1,53 +1,46 @@
 {
+  appimageTools,
+  fetchurl,
   lib,
-  stdenv,
-  fetchFromGitHub,
-  fetchPnpmDeps,
-  nodejs,
-  pnpm_10,
-  pnpmConfigHook,
-  makeWrapper,
 }:
-stdenv.mkDerivation (finalAttrs: {
+
+let
   pname = "orca";
-  version = "1.4.165";
+  version = "1.4.173";
 
-  src = fetchFromGitHub {
-    owner = "stablyai";
-    repo = "orca";
-    tag = "v${finalAttrs.version}";
-    hash = "sha256-/2gN9Ozu+e3A5JeEFM3LQ709byUvCtkhQKgMm6F7xZc=";
+  src = fetchurl {
+    url = "https://github.com/stablyai/orca/releases/download/v${version}/orca-linux.AppImage";
+    hash = "sha256-0i3MzkvDnLcz5f4gM7wC21lhjxmgj0xYQzs9j6xMHlYFSmJ547s=";
   };
 
-  pnpmDeps = fetchPnpmDeps {
-    pname = "orca";
-    inherit (finalAttrs) version src;
-    pnpm = pnpm_10;
-    fetcherVersion = 3;
-    hash = "sha256-6SV2MB/EOrrSOjSSIDRLPcSGnwkAG2lNldAG3iE4zDg=";
-  };
+  appimageContents = appimageTools.extractType2 { inherit pname version src; };
+in
+appimageTools.wrapType2 {
+  inherit pname version src;
 
-  nativeBuildInputs = [
-    nodejs
-    pnpm_10
-    pnpmConfigHook
-    makeWrapper
+  # Extra runtime dependencies that the AppImage needs.
+  # orca uses Electron with node-pty (terminal), WebGL rendering, and secrets.
+  extraPkgs = pkgs: with pkgs; [
+    libsecret
+    xorg.libXrandr
+    libGL
+    vulkan-loader
+    nspr
+    nss
+    alsa-lib
   ];
 
-  buildPhase = ''
-    runHook preBuild
-    pnpm run build:cli
-    runHook postBuild
-  '';
+  extraInstallCommands = ''
+    # Install the .desktop file with corrected Exec path
+    install -Dm444 ${appimageContents}/orca-ide.desktop $out/share/applications/orca.desktop
+    substituteInPlace $out/share/applications/orca.desktop \
+      --replace-fail 'Exec=AppRun --no-sandbox %U' 'Exec=orca %U'
 
-  installPhase = ''
-    runHook preInstall
-    mkdir -p $out/lib/orca
-    cp -r package.json out node_modules $out/lib/orca
-    mkdir -p $out/bin
-    makeWrapper ${nodejs}/bin/node $out/bin/orca \
-      --add-flags $out/lib/orca/out/cli/index.js
-    runHook postInstall
+    # Install all icon sizes
+    for icon in ${appimageContents}/usr/share/icons/hicolor/*/apps/orca-ide.png; do
+      size=$(echo "$icon" | sed 's|.*/hicolor/\(.*\)/apps/.*|\1|')
+      install -Dm444 "$icon" "$out/share/icons/hicolor/$size/apps/orca.png"
+    done
   '';
 
   meta = {
@@ -55,6 +48,6 @@ stdenv.mkDerivation (finalAttrs: {
     homepage = "https://github.com/stablyai/orca";
     license = lib.licenses.mit;
     mainProgram = "orca";
-    platforms = [ "x86_64-linux" "aarch64-linux" ];
+    platforms = [ "x86_64-linux" ];
   };
-})
+}
