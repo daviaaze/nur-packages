@@ -53,9 +53,30 @@
       packages = forAllSystems (
         system:
         let
+          pkgs = import nixpkgs { inherit system; };
           packages = mkPackages system;
+          # Bare `nix build` realizes every package (builds all missing ones).
+          default =
+            pkgs.linkFarm "nur-default" (
+              map (name: {
+                inherit name;
+                path = packages.${name};
+              }) [
+                "atlassian-cli"
+                "batteryscope"
+                "opencli"
+                "orca"
+                "pup"
+                "rtk"
+                "torrentio-addon"
+                "stremio-python"
+                "stremio-server"
+                "stremio-docker"
+                "torrentio-docker"
+              ]
+            );
         in
-        packages // { default = packages.orca; }
+        packages // { inherit default; }
       );
 
       # Consume all packages as an overlay: pkgs.{orca,rtk,...}
