@@ -22,7 +22,12 @@
           torrentio-addon = pkgs.callPackage ./pkgs/torrentio/package.nix { };
 
           stremio-python = import ./pkgs/stremio/stremio-python.nix {
-            inherit (pkgs) lib python314 buildPythonPackage fetchFromGitHub;
+            inherit (pkgs)
+              lib
+              python314
+              buildPythonPackage
+              fetchFromGitHub
+              ;
           };
           stremio-server = pkgs.callPackage ./pkgs/stremio/server.nix {
             inherit (pkgs) lib fetchFromGitHub;
@@ -31,7 +36,19 @@
             python = stremio-python;
           };
           stremio-docker = pkgs.callPackage ./pkgs/stremio/docker.nix {
-            inherit (pkgs) lib dockerTools ffmpeg nginx curl runCommand writeText symlinkJoin bash coreutils stdenvNoCC;
+            inherit (pkgs)
+              lib
+              dockerTools
+              ffmpeg
+              nginx
+              curl
+              runCommand
+              writeText
+              symlinkJoin
+              bash
+              coreutils
+              stdenvNoCC
+              ;
             inherit stremio-server;
             python = stremio-python;
           };
@@ -39,6 +56,7 @@
         {
           atlassian-cli = pkgs.callPackage ./pkgs/atlassian-cli/package.nix { };
           batteryscope = pkgs.callPackage ./pkgs/batteryscope/package.nix { };
+          dsh = pkgs.callPackage ./pkgs/dsh/package.nix { };
           opencli = pkgs.callPackage ./pkgs/opencli/package.nix { };
           orca = pkgs.callPackage ./pkgs/orca/package.nix { };
           pup = pkgs.callPackage ./pkgs/pup/package.nix { };
@@ -46,7 +64,12 @@
           torrentio-docker = pkgs.callPackage ./pkgs/torrentio/docker.nix {
             inherit torrentio-addon;
           };
-          inherit torrentio-addon stremio-python stremio-server stremio-docker;
+          inherit
+            torrentio-addon
+            stremio-python
+            stremio-server
+            stremio-docker
+            ;
         };
     in
     {
@@ -56,14 +79,16 @@
           pkgs = import nixpkgs { inherit system; };
           packages = mkPackages system;
           # Bare `nix build` realizes every package (builds all missing ones).
-          default =
-            pkgs.linkFarm "nur-default" (
-              map (name: {
+          default = pkgs.linkFarm "nur-default" (
+            map
+              (name: {
                 inherit name;
                 path = packages.${name};
-              }) [
+              })
+              [
                 "atlassian-cli"
                 "batteryscope"
+                "dsh"
                 "opencli"
                 "orca"
                 "pup"
@@ -74,7 +99,7 @@
                 "stremio-docker"
                 "torrentio-docker"
               ]
-            );
+          );
         in
         packages // { inherit default; }
       );
