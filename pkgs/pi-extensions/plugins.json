@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "extDir": "pi-setup/extensions",
+  "plugins": {
+    "rtk": {
+      "src": {
+        "type": "github",
+        "owner": "daviaaze",
+        "repo": "ai-workspace",
+        "rev": "ef5499a5a22832da27f503b17e4ee659cdba8a87",
+        "hash": "sha256-/keVHyfS/cx8NQaDM28QyqiNzatlyCle3DdohlxN4l8="
+      },
+      "files": [
+        "pi-setup/extensions/rtk.ts"
+      ],
+      "bundle": false
+    }
+  }
+}

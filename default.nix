@@ -9,6 +9,8 @@ in
   atlassian-cli = pkgs.callPackage ./pkgs/atlassian-cli/package.nix { };
   batteryscope = pkgs.callPackage ./pkgs/batteryscope/package.nix { };
   dsh = pkgs.callPackage ./pkgs/dsh/package.nix { };
+  pi-extensions = (pkgs.callPackage ./pkgs/pi-extensions/default.nix { }).default;
+  pi-rtk = (pkgs.callPackage ./pkgs/pi-extensions/default.nix { }).rtk;
   opencli = pkgs.callPackage ./pkgs/opencli/package.nix { };
   orca = pkgs.callPackage ./pkgs/orca/package.nix { };
   pup = pkgs.callPackage ./pkgs/pup/package.nix { };

@@ -52,6 +52,9 @@
             inherit stremio-server;
             python = stremio-python;
           };
+
+          # Pi extension registry (manifest-driven; see pkgs/pi-extensions).
+          piExt = pkgs.callPackage ./pkgs/pi-extensions/default.nix { };
         in
         {
           atlassian-cli = pkgs.callPackage ./pkgs/atlassian-cli/package.nix { };
@@ -70,6 +73,8 @@
             stremio-server
             stremio-docker
             ;
+          pi-rtk = piExt.rtk;
+          pi-extensions = piExt.default;
         };
     in
     {
@@ -90,6 +95,8 @@
                 "batteryscope"
                 "dsh"
                 "opencli"
+                "pi-rtk"
+                "pi-extensions"
                 "orca"
                 "pup"
                 "rtk"
