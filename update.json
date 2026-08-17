@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "packages": [
+    {
+      "attr": "rtk",
+      "strategy": "github-release",
+      "repo": "rtk-ai/rtk",
+      "tagPrefix": "v",
+      "file": "pkgs/rtk/package.nix",
+      "assetMatch": "musl"
+    },
+    {
+      "attr": "pup",
+      "strategy": "github-release",
+      "repo": "datadog-labs/pup",
+      "tagPrefix": "v",
+      "file": "pkgs/pup/package.nix",
+      "assetMatch": "Linux_x86_64",
+      "platformFieldByHost": true
+    },
+    {
+      "attr": "orca",
+      "strategy": "appimage",
+      "repo": "stablyai/orca",
+      "tagPrefix": "v",
+      "file": "pkgs/orca/package.nix",
+      "assetMatch": "linux.*AppImage"
+    },
+    {
+      "attr": "stremio",
+      "strategy": "github-rev",
+      "repo": "andrewhack/stremio-libtorrent-server",
+      "tag": "v1.3.4",
+      "file": "pkgs/stremio/package.nix"
+    },
+    {
+      "attr": "torrentio",
+      "strategy": "github-rev",
+      "repo": "daviaaze/torrentio-scraper",
+      "file": "pkgs/torrentio/package.nix",
+      "rev": "0f426d2e2c7da9bffaf871e0b14a0a89acf149d5"
+    }
+  ]
+}
