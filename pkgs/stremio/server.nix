@@ -16,7 +16,7 @@
 }:
 let
   pname = "stremiosrv";
-  version = "1.0.3";
+  version = "1.3.4";
 in
 buildPythonPackage {
   inherit pname version;
@@ -27,8 +27,8 @@ buildPythonPackage {
     fetchFromGitHub {
       owner = "andrewhack";
       repo = "stremio-libtorrent-server";
-      rev = "9a15ee486ced23bda24677b8916c136679c70c72";
-      hash = "sha256-ioIzpXo8u+fi4bCS+kpTVL4kh9TartzgR/QkTfK5xd8=";
+      rev = "4d7631128eac1976c014dfdc2f132b3e7a2ee28b";
+      hash = "sha256-nhHIGoGjCJlvwybgbuX+hRTwADobqpDFFl4huknT4Fo=";
     };
 
   pyproject = true;

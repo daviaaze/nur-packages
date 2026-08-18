@@ -28,25 +28,42 @@ def sri_of(url: str) -> str:
 
 def latest_tag(repo: str) -> str:
     out = subprocess.run(
-        ["gh", "release", "latest", "--repo", repo, "--json", "tagName"],
+        ["gh", "api", f"repos/{repo}/releases/latest", "--jq", ".tag_name"],
         capture_output=True, text=True, check=True,
-    ).stdout
-    return json.loads(out)["tagName"]
+    ).stdout.strip()
+    return out
 
 
 def release_asset(repo: str, tag: str, matcher: str) -> str:
     out = subprocess.run(
-        ["gh", "release", "view", "--repo", repo, "--tag", tag, "--json", "assets"],
+        ["gh", "api", f"repos/{repo}/releases/tags/{tag}",
+         "--jq", ".assets[] | {name, browser_download_url, url}"],
         capture_output=True, text=True, check=True,
     ).stdout
-    for a in json.loads(out)["assets"]:
+    for line in out.splitlines():
+        a = json.loads(line)
         if re.search(matcher, a["name"]):
-            return a["url"]
+            return a["browser_download_url"]
     raise SystemExit(f"no asset matching {matcher!r} in {repo}@{tag}")
 
 
 def strip_prefix(s: str, prefix: str) -> str:
     return re.sub(rf"^{re.escape(prefix)}", "", s)
+
+
+def set_field(nix: str, field: str, value: str) -> str:
+    """Replace `field = "..."` or `field ? "..."` (default-arg) value."""
+    n, count = None, 0
+    for sep in ("\\s*=\\s*", "\\s*\\?\\s*"):
+        pat = re.compile(
+            rf"({re.escape(field)}{sep}\")[^\"]*(\")",
+        )
+        n, count = pat.subn(lambda m: m.group(1) + value + m.group(2), nix)
+        if count:
+            break
+    if count == 0:
+        raise SystemExit(f"field {field!r} not found")
+    return n
 
 
 def main() -> None:
@@ -57,7 +74,11 @@ def main() -> None:
 
     with CONF.open() as fh:
         data = json.load(fh)
-    entry = next(p for p in data["packages"] if p["attr"] == args.attr)
+    entry = next(
+        (p for p in data["packages"] if p["attr"] == args.attr), None
+    )
+    if entry is None:
+        raise SystemExit(f"no update.json entry for attr {args.attr!r}")
 
     file = ROOT / entry["file"]
     nix = file.read_text()
@@ -68,48 +89,23 @@ def main() -> None:
 
     subs = {}  # field -> new value
 
-    if strategy == "github-release":
+    if strategy in ("github-release", "appimage"):
         tag = latest_tag(repo)
         subs["version"] = strip_prefix(tag, tag_prefix)
-        asset = entry["assetMatch"]
-        url = release_asset(repo, tag, asset)
+        url = release_asset(repo, tag, entry["assetMatch"])
         subs[entry.get("hashField", "hash")] = sri_of(url)
     elif strategy == "github-rev":
         rev = entry["rev"]
         url = f"https://github.com/{repo}/archive/{rev}.tar.gz"
-        subs["rev"] = rev
+        subs[entry.get("revField", "rev")] = rev
         subs[entry.get("hashField", "hash")] = sri_of(url)
-    elif strategy in ("appimage", "platform-release"):
-        tag = latest_tag(repo)
-        new_version = strip_prefix(tag, tag_prefix)
-        asset = entry["assetMatch"]
-        url = release_asset(repo, tag, asset)
-        subs["version"] = new_version
-        subs[entry.get("hashField", "hash")] = sri_of(url)
-        if strategy == "platform-release":
-            # hash is a per-platform map
-            pass
+        if entry.get("versionField"):
+            subs[entry["versionField"]] = entry.get("version", rev)
     else:
         raise SystemExit(f"unknown strategy {strategy!r}")
 
-    # Apply simple field substitutions first
     for field, value in subs.items():
-        n, count = re.subn(
-            rf'({re.escape(field)}\s*=\s*")[^"]*(")',
-            lambda m: m.group(1) + value + m.group(2),
-            nix,
-        )
-        if count == 0:
-            raise SystemExit(f"field {field!r} not found (single-line)")
-
-    # Platform hash maps: rewrite inside the {} of a given field.
-    if strategy == "platform-release":
-        plat_subs = entry.get("hashByPlatform", {})
-        n = re.sub(
-            rf'({re.escape(entry["hashField"])}\s*=\s*\{{)([^}}]*)(\}})',
-            lambda m: m.group(1) + _rewrite_platforms(m.group(2), plat_subs) + m.group(3),
-            nix,
-        )
+        nix = set_field(nix, field, value)
 
     file.write_text(nix)
 

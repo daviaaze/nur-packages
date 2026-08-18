@@ -15,9 +15,9 @@
   nodejs_22,
   stdenv,
   version ? "1.0.14",
-  rev ? "a698ab06a0ffa93111243a0f50cb8c22e81d5d58",
-  hash ? "sha256-Yc7UiVg2itTkG9PvigZzINEwKrR7QpR6FPBgCWsHMOE=",
-  npmDepsHash ? "sha256-U9ee4xbx/dFO+Si00avfO4sm56kUj8aLgjAS6ADHk5Y=",
+  rev ? "0f426d2e2c7da9bffaf871e0b14a0a89acf149d5",
+  hash ? "sha256-kZlGE4XvLIY+bscTsLJfC1NcTAmNugbcjg3MS6k/X14=",
+  npmDepsHash ? "sha256-GI1FIQB/rIJ/T7jopXQy/1bRF8WdApSVaw6aXbWLrTs=",
 }:
 let
   src = fetchFromGitHub {
