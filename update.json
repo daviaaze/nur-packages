@@ -39,11 +39,11 @@
       "attr": "stremio-server",
       "strategy": "github-rev",
       "repo": "andrewhack/stremio-libtorrent-server",
-      "rev": "4d7631128eac1976c014dfdc2f132b3e7a2ee28b",
-      "tag": "v1.3.4",
+      "rev": "163e906fd1ad6fc42bc792d7950a810269766551",
+      "tag": "v1.3.5",
       "file": "pkgs/stremio/server.nix",
       "versionField": "version",
-      "version": "1.3.4"
+      "version": "1.3.5"
     },
     {
       "attr": "dsh",
