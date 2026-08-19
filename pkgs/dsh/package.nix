@@ -12,12 +12,12 @@
 }:
 
 let
-  version = "0.1.0-rc.5";
+  version = "0.1.0-rc.7";
   src = fetchFromGitHub {
     owner = "deepseek-ai";
     repo = "deepseek-harness";
-    rev = "47f943859bef60e4160492346772ded9b24f765a";
-    hash = "sha256-ZPGCNoPXVjP76Tm/tFPDX2X95cd83M4iHLmVP5dR+Ps=";
+    rev = "99f6f02fecdb7dff40c3fbc9470f5907c29f74ca";
+    hash = "sha256-xPP8FB308n8SD5B65whaErLyaDBbFferoQ9g3H6h2es=";
   };
 in
 stdenv.mkDerivation (finalAttrs: {
@@ -26,7 +26,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
-    hash = "sha256-aySHq0ywTMM5q7YuGHZrV3yQE3bwppgGfWH3wRnHCXk=";
+    hash = "sha256-zmlWt5HYvzkCnCDD5X/psgfGPbRAUwO0p4qDtI5+R5M=";
     fetcherVersion = 4; # pnpm 11 store dump (SQLite); required for pnpm_11
   };
 
