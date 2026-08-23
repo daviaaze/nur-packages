@@ -58,6 +58,14 @@ stdenv.mkDerivation (finalAttrs: {
     cp -a . $out/lib/
     rm -rf $out/lib/.git $out/lib/result
 
+    # pnpm 11 emits dangling symlinks for @openai/codex's aliased per-platform
+    # optional packages (…-linux-x64, …-darwin-arm64, …): fetchPnpmDeps doesn't
+    # download those platform tarballs, so their virtual-store cells are empty
+    # and the noBrokenSymlinks output check rejects the resulting dead links.
+    # They are non-functional either way — drop them. (GNU find: `-xtype l`
+    # matches symlinks whose referent doesn't exist.)
+    find $out/lib -type l -xtype l -delete
+
     # npm ships @deepseek-ai/* flat under the top-level node_modules; pnpm keeps
     # it nested, so the bundled loader's `import '@deepseek-ai/…'` fails to
     # resolve from arbitrary modules. Point the root @deepseek-ai cell at pnpm's
