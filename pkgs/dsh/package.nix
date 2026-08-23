@@ -26,7 +26,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
-    hash = "sha256-zmlWt5HYvzkCnCDD5X/psgfGPbRAUwO0p4qDtI5+R5M=";
+    hash = "sha256-5p0NWOajqZ9+/IqqD2nZmoug60KtbUtuPy6t8bDELsc=";
     fetcherVersion = 4; # pnpm 11 store dump (SQLite); required for pnpm_11
   };
 
