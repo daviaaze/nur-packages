@@ -14,6 +14,7 @@
   ffmpeg,
   nginx,
   curl,
+  openssl,
   python,
   runCommand,
   writeText,
@@ -263,6 +264,7 @@ dockerTools.buildImage {
     ffmpeg
     nginx
     curl
+    openssl
     bash
     coreutils
     (runCommand "stremio-root" { } ''
@@ -314,7 +316,7 @@ dockerTools.buildImage {
     Cmd = [ ];
 
     HealthCheck = {
-      Test = [ "CMD" "curl" "-fsS" "http://127.0.0.1:8080/" ];
+      Test = [ "CMD" "curl" "-fsS" "http://127.0.0.1:8080/health" ];
       Interval = 30000000000; # 30s in nanoseconds
       Timeout = 5000000000;  # 5s
       StartPeriod = 20000000000; # 20s
