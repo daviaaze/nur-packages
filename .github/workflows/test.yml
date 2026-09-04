@@ -44,8 +44,18 @@ jobs:
             done
           fi
 
-      - name: Auto-merge if this is a bot update PR
-        if: startsWith(github.head_ref, 'update-')
+  # Separate job so it runs only after the build check above has completed —
+  # enabling auto-merge from inside the build job fails with "unstable status"
+  # because the PR's own required check is still pending.
+  automerge:
+    needs: build
+    if: startsWith(github.head_ref, 'update-')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Auto-merge update PR
         env:
           GH_TOKEN: ${{ secrets.PAT || github.token }}
         run: |
