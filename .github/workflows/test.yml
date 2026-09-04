@@ -62,4 +62,14 @@ jobs:
           # otherwise and fails with "not a git repository".
           GH_REPO: ${{ github.repository }}
         run: |
-          gh pr merge --auto --squash ${{ github.event.pull_request.number }}
+          # The build job (needs) is green at this point, so merge directly.
+          # --auto is not usable here: enabling it fails with "unstable status"
+          # while check reports settle, and with "protected branch rules not
+          # configured" when the branch has no required checks. Retry to
+          # absorb races with other update PRs merging into main.
+          for i in {1..5}; do
+            gh pr merge --squash ${{ github.event.pull_request.number }} && exit 0
+            echo "merge attempt $i failed; retrying in 10s"
+            sleep 10
+          done
+          exit 1
