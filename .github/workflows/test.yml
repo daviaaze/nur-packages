@@ -19,6 +19,11 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
+        with:
+          # Full history so origin/main exists for the changed-package diff below.
+          # With the default fetch-depth: 1, `git diff origin/main...HEAD` errors
+          # and every PR silently falls back to building all packages.
+          fetch-depth: 0
 
       - name: Install Nix
         uses: cachix/install-nix-action@v31
@@ -39,8 +44,18 @@ jobs:
             done
           fi
 
-      - name: Auto-merge if this is a bot update PR
-        if: startsWith(github.head_ref, 'update-')
+  # Separate job so it runs only after the build check above has completed —
+  # enabling auto-merge from inside the build job fails with "unstable status"
+  # because the PR's own required check is still pending.
+  automerge:
+    needs: build
+    if: startsWith(github.head_ref, 'update-')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Auto-merge update PR
         env:
           GH_TOKEN: ${{ secrets.PAT || github.token }}
         run: |
