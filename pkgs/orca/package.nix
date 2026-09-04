@@ -34,7 +34,7 @@ appimageTools.wrapType2 {
     # Install the .desktop file with corrected Exec path
     install -Dm444 ${appimageContents}/orca-ide.desktop $out/share/applications/orca.desktop
     substituteInPlace $out/share/applications/orca.desktop \
-      --replace-fail 'Exec=AppRun --no-sandbox %U' 'Exec=orca %U'
+      --replace-fail 'Exec=AppRun' 'Exec=orca'
 
     # Install all icon sizes
     for icon in ${appimageContents}/usr/share/icons/hicolor/*/apps/orca-ide.png; do
