@@ -51,6 +51,7 @@
               ;
             inherit stremio-server;
             python = stremio-python;
+            web-ui = ./pkgs/stremio/web-ui;
           };
 
           # Pi extension registry (manifest-driven; see pkgs/pi-extensions).
