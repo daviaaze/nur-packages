@@ -33,6 +33,12 @@ buildPythonPackage {
 
   pyproject = true;
 
+  # Sequential episode prioritization: while watching episode N of a season
+  # pack, file priorities give N max priority and the next episodes a
+  # descending ladder (3,2,1) so the follow-up episode is pre-downloaded
+  # without racing the current one. Anterior episodes stay skipped (prio 0).
+  patches = [ ./sequential-priority.patch ];
+
   # Remove the PyPI libtorrent dependency — we use nixpkgs' libtorrent-rasterbar
   # which provides the same `libtorrent` Python module.
   postPatch = ''
