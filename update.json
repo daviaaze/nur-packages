@@ -30,7 +30,7 @@
       "attr": "torrentio-addon",
       "strategy": "github-rev",
       "repo": "daviaaze/torrentio-scraper",
-      "rev": "e9240454eab423f41b24492b32ead3618ee35da8",
+      "rev": "848a26dfd20f1b2ebdb9176d28a897807cfd5296",
       "file": "pkgs/torrentio/package.nix",
       "versionField": "version",
       "version": "1.0.14"
