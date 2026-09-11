@@ -15,8 +15,8 @@
   nodejs_22,
   stdenv,
   version ? "1.0.14",
-  rev ? "0f426d2e2c7da9bffaf871e0b14a0a89acf149d5",
-  hash ? "sha256-kZlGE4XvLIY+bscTsLJfC1NcTAmNugbcjg3MS6k/X14=",
+  rev ? "e9240454eab423f41b24492b32ead3618ee35da8",
+  hash ? "sha256-BmJqHrB+NPordrMETeRyeaRr9pFA9nCJcXk5EEkgdvk=",
   npmDepsHash ? "sha256-GI1FIQB/rIJ/T7jopXQy/1bRF8WdApSVaw6aXbWLrTs=",
 }:
 let

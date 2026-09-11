@@ -25,10 +25,10 @@ buildPythonPackage {
     srcPath
   else
     fetchFromGitHub {
-      owner = "andrewhack";
+      owner = "daviaaze";
       repo = "stremio-libtorrent-server";
-      rev = "4d7631128eac1976c014dfdc2f132b3e7a2ee28b";
-      hash = "sha256-nhHIGoGjCJlvwybgbuX+hRTwADobqpDFFl4huknT4Fo=";
+      rev = "f517167c1c45d28234cef28de1e1d5beb0f80fde";
+      hash = "sha256-mZPbiRXnD/ZUqN+NHCbXx4R1QthF7px80pq/9HtlApY=";
     };
 
   pyproject = true;
@@ -37,7 +37,7 @@ buildPythonPackage {
   # pack, file priorities give N max priority and the next episodes a
   # descending ladder (3,2,1) so the follow-up episode is pre-downloaded
   # without racing the current one. Anterior episodes stay skipped (prio 0).
-  patches = [ ./sequential-priority.patch ];
+  # (Applied in fork, no Nix-side patch needed)
 
   # Remove the PyPI libtorrent dependency — we use nixpkgs' libtorrent-rasterbar
   # which provides the same `libtorrent` Python module.
