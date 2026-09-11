@@ -66,7 +66,7 @@ buildPythonPackage {
 
   meta = {
     description = "Open, self-hosted Stremio streaming server (libtorrent engine + bundled web player) — patched for FileNotFoundError recovery";
-    homepage = "https://github.com/andrewhack/stremio-libtorrent-server";
+    homepage = "https://github.com/daviaaze/stremio-libtorrent-server";
     license = lib.licenses.mit;
     platforms = [ "x86_64-linux" ];
   };

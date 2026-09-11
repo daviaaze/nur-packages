@@ -30,7 +30,7 @@
       "attr": "torrentio-addon",
       "strategy": "github-rev",
       "repo": "daviaaze/torrentio-scraper",
-      "rev": "0f426d2e2c7da9bffaf871e0b14a0a89acf149d5",
+      "rev": "e9240454eab423f41b24492b32ead3618ee35da8",
       "file": "pkgs/torrentio/package.nix",
       "versionField": "version",
       "version": "1.0.14"
@@ -38,7 +38,7 @@
     {
       "attr": "stremio-server",
       "strategy": "github-rev",
-      "repo": "andrewhack/stremio-libtorrent-server",
+      "repo": "daviaaze/stremio-libtorrent-server",
       "rev": "163e906fd1ad6fc42bc792d7950a810269766551",
       "tag": "v1.3.5",
       "file": "pkgs/stremio/server.nix",
