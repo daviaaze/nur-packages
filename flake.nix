@@ -65,6 +65,7 @@
           orca = pkgs.callPackage ./pkgs/orca/package.nix { };
           pup = pkgs.callPackage ./pkgs/pup/package.nix { };
           rtk = pkgs.callPackage ./pkgs/rtk/package.nix { };
+          zen-browser = pkgs.callPackage ./pkgs/zen-browser/package.nix { };
           torrentio-docker = pkgs.callPackage ./pkgs/torrentio/docker.nix {
             inherit torrentio-addon;
           };
@@ -106,6 +107,7 @@
                 "stremio-server"
                 "stremio-docker"
                 "torrentio-docker"
+                "zen-browser"
               ]
           );
         in

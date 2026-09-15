@@ -54,6 +54,13 @@
       "file": "pkgs/dsh/package.nix",
       "versionField": "version",
       "version": "0.1.0-rc.7"
+    },
+    {
+      "attr": "zen-browser",
+      "strategy": "github-release",
+      "repo": "zen-browser/desktop",
+      "file": "pkgs/zen-browser/package.nix",
+      "assetMatch": "zen.linux-x86_64.tar.xz"
     }
   ]
 }
