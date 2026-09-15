@@ -27,6 +27,7 @@ repo_for() {
     opencli) echo "jackwener/OpenCLI" ;;
     atlassian-cli) echo "open-cli-collective/atlassian-cli" ;;
     batteryscope) echo "ptcodes/BatteryScope" ;;
+    zen-browser) echo "zen-browser/desktop" ;;
     *) return 1 ;;
   esac
 }
@@ -66,6 +67,19 @@ case "$ATTR" in
       sed -i "s/version = \"[^\"]*\"/version = \"$LATEST\"/" "$PKG"
       sed -i "s|Linux_x86_64 = \"sha256-[^\"]*\"|Linux_x86_64 = \"$NEW_HASH\"|" "$PKG"
       echo "pup -> $LATEST ($NEW_HASH)"
+    fi
+    ;;
+
+  # zen-browser: release tarball — nix-update can't rewrite the embedded
+  # fetchurl hash, so bump version + SRI hash manually (same as pup).
+  zen-browser)
+    if [[ -n "$LATEST" ]]; then
+      PKG="pkgs/zen-browser/package.nix"
+      URL="https://github.com/zen-browser/desktop/releases/download/${LATEST}/zen.linux-x86_64.tar.xz"
+      NEW_HASH="$(nix store prefetch-file --json --hash-type sha256 "$URL" | jq -r .hash)"
+      sed -i "s/version = \"[^\"]*\"/version = \"$LATEST\"/" "$PKG"
+      sed -i "s|hash = \"sha256-[^\"]*\"|hash = \"$NEW_HASH\"|" "$PKG"
+      echo "zen-browser -> $LATEST ($NEW_HASH)"
     fi
     ;;
 
