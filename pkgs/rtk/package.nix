@@ -12,10 +12,10 @@
   stdenvNoCC,
 }:
 let
-  version = "0.50.0";
+  version = "0.51.0";
   src = fetchurl {
     url = "https://github.com/rtk-ai/rtk/releases/download/v${version}/rtk-x86_64-unknown-linux-musl.tar.gz";
-    hash = "sha256-vCuJArDZx5bILvRfFq4jB+F3V6/spe4VYjWj3HvaX4k=";
+    hash = "sha256-UCjTsZqPCZDTD+yfuwfjJ4K8VpjmGPsYYarYqcy6TrU=";
   };
 in
 stdenvNoCC.mkDerivation {
