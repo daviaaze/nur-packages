@@ -26,10 +26,10 @@
   wrapFirefox,
 }:
 let
-  version = "1.23b";
+  version = "1.23.2b";
   src = fetchurl {
     url = "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-x86_64.tar.xz";
-    hash = "sha256-mtefUPUqYLhfGgeH3iJyNZNOoL2ZT3m3OfqAYIGz/PA=";
+    hash = "sha256-Xmf0+ggbG0NyQ8RkRJ6hvSo7Fbb5Mkh6iqDCWqhRRgA=";
   };
 
   zen-unwrapped = stdenv.mkDerivation {
