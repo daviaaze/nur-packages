@@ -12,6 +12,7 @@ in
   pi-extensions = (pkgs.callPackage ./pkgs/pi-extensions/default.nix { }).default;
   pi-rtk = (pkgs.callPackage ./pkgs/pi-extensions/default.nix { }).rtk;
   opencli = pkgs.callPackage ./pkgs/opencli/package.nix { };
+  penpot-desktop = pkgs.callPackage ./pkgs/penpot-desktop/package.nix { };
   orca = pkgs.callPackage ./pkgs/orca/package.nix { };
   pup = pkgs.callPackage ./pkgs/pup/package.nix { };
   rtk = pkgs.callPackage ./pkgs/rtk/package.nix { };
