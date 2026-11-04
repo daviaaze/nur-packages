@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: [rtk, pup, orca, opencli, zen-browser]
+        package: [rtk, pup, orca, opencli, zen-browser, penpot-desktop]
 
     steps:
       - name: Checkout Repository

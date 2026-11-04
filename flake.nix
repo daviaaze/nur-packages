@@ -62,6 +62,7 @@
           batteryscope = pkgs.callPackage ./pkgs/batteryscope/package.nix { };
           dsh = pkgs.callPackage ./pkgs/dsh/package.nix { };
           opencli = pkgs.callPackage ./pkgs/opencli/package.nix { };
+          penpot-desktop = pkgs.callPackage ./pkgs/penpot-desktop/package.nix { };
           orca = pkgs.callPackage ./pkgs/orca/package.nix { };
           pup = pkgs.callPackage ./pkgs/pup/package.nix { };
           rtk = pkgs.callPackage ./pkgs/rtk/package.nix { };
@@ -97,6 +98,7 @@
                 "batteryscope"
                 "dsh"
                 "opencli"
+                "penpot-desktop"
                 "pi-rtk"
                 "pi-extensions"
                 "orca"

@@ -25,6 +25,7 @@ repo_for() {
     pup) echo "datadog-labs/pup" ;;
     orca) echo "stablyai/orca" ;;
     opencli) echo "jackwener/OpenCLI" ;;
+    penpot-desktop) echo "author-more/penpot-desktop" ;;
     atlassian-cli) echo "open-cli-collective/atlassian-cli" ;;
     batteryscope) echo "ptcodes/BatteryScope" ;;
     zen-browser) echo "zen-browser/desktop" ;;
@@ -49,7 +50,7 @@ echo "Updating $ATTR -> ${LATEST:-<unchanged>}"
 
 case "$ATTR" in
   # nix-update handles these: bumps version and all hashes, builds to verify
-  rtk | orca | opencli)
+  rtk | orca | opencli | penpot-desktop)
     if [[ -n "$LATEST" ]]; then
       nix-update "$ATTR" --flake --version "$LATEST" --build
     else
