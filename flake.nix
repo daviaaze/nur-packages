@@ -29,9 +29,25 @@
               fetchFromGitHub
               ;
           };
+          # Stremio 1.3.4 declares uv_build<0.12; nixpkgs now ships 0.12.5.
+          # Keep its isolated build backend on the last compatible release.
+          stremio-uv-build = pkgs.python3Packages.uv-build.overridePythonAttrs (old: rec {
+            version = "0.11.28";
+            src = pkgs.fetchFromGitHub {
+              owner = "astral-sh";
+              repo = "uv";
+              tag = version;
+              hash = "sha256-/mTH2hojC+l0yxn+LEAIj8FTA/nWKIPZ7uLMVJxebw4=";
+            };
+            cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
+              pname = old.pname;
+              inherit version src;
+              hash = "sha256-FvLl32JfIq5a1NnLtnFJyy5T+vkcOD+qfQLDy6NYhHg=";
+            };
+          });
           stremio-server = pkgs.callPackage ./pkgs/stremio/server.nix {
             inherit (pkgs) lib fetchFromGitHub;
-            uv-build = pkgs.python3Packages.uv-build;
+            uv-build = stremio-uv-build;
             buildPythonPackage = pkgs.python3Packages.buildPythonPackage;
             python = stremio-python;
           };
